@@ -1,0 +1,32 @@
+{
+  "papi_version":"6.0.0.1",
+  "cpu_info":"Intel(R) Xeon(R) W-2255 CPU @ 3.70GHz",
+  "max_cpu_rate_mhz":"3700",
+  "min_cpu_rate_mhz":"1200",
+  "event_definitions":{
+    "PAPI_L1_DCM":{
+      "component":"perf_event",
+      "type":"delta"
+    }
+  },
+  "threads":{
+    "0":{
+      "regions":{
+        "0":{
+          "name":"naive_mm",
+          "parent_region_id":"-1",
+          "cycles":"7976726",
+          "real_time_nsec":"2154113",
+          "PAPI_L1_DCM":"267167"
+        },
+        "1":{
+          "name":"tiled_mm",
+          "parent_region_id":"-1",
+          "cycles":"6683048",
+          "real_time_nsec":"1808566",
+          "PAPI_L1_DCM":"49286"
+        }
+      }
+    }
+  }
+}
