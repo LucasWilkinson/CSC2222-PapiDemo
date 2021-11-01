@@ -7,8 +7,8 @@ unsigned long omp_get_thread_num_wrapper(){
     return (unsigned long)omp_get_thread_num();
 }
 
-#define N 1024
-#define BLOCK_SIZE 32
+#define N 512
+#define BLOCK_SIZE 16
 typedef std::vector<std::vector<double>> TwoDVec;
 
 inline void tileCode(TwoDVec& C, TwoDVec& A, TwoDVec& B){
@@ -244,7 +244,7 @@ void potentialGainUnBalanced(){
             ERROR_RETURN(retval)
         }
         //========================================================================================
-        std::cout << omp_get_thread_num() << std::endl;
+
         //================= unbalanced DGEMM ================
         #pragma omp for schedule (static, N) nowait
         for (int i = 0; i < N; i ++) {
@@ -277,6 +277,7 @@ void potentialGainUnBalanced(){
 
         PAPI_unregister_thread();
     }
+    std::cout << "Thread 1 cycles: " <<  TOT_CYC_TH1 << "\t" <<  "Thread 2 cycles: " << TOT_CYC_TH2 << std::endl;
     double total_balance_work = (TOT_CYC_TH1 + TOT_CYC_TH2) / 2;
     double critical_path = std::max(TOT_CYC_TH1, TOT_CYC_TH2);
     double PG = 1 - total_balance_work / critical_path;
@@ -345,7 +346,6 @@ void potentialGainBalanced(){
             }
         }
         //===================================================
-        std::cout << omp_get_thread_num() << std::endl;
         if(omp_get_thread_num() == 0){
             if((retval = PAPI_stop(event_set, &TOT_CYC_TH1)) != PAPI_OK){
                 ERROR_RETURN(retval)
@@ -368,7 +368,7 @@ void potentialGainBalanced(){
 
         PAPI_unregister_thread();
     }
-    std::cout << TOT_CYC_TH1 << "\t" << TOT_CYC_TH2 << std::endl;
+    std::cout << "Thread 1 cycles: " <<  TOT_CYC_TH1 << "\t" <<  "Thread 2 cycles: " << TOT_CYC_TH2 << std::endl;
     double total_balance_work = (TOT_CYC_TH1 + TOT_CYC_TH2) / 2;
     double critical_path = std::max(TOT_CYC_TH1, TOT_CYC_TH2);
     double PG = 1 - total_balance_work / critical_path;
