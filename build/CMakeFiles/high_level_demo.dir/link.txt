@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/high_level_demo.dir/high_level_demo.cpp.o  -o high_level_demo -Wl,-rpath,/home/behrooz/Software/PAPI/lib /home/behrooz/Software/PAPI/lib/libpapi.so 

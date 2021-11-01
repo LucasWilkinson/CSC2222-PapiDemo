@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/MemoryLatencyAndPotentialGain.dir/MemoryLatencyAndPotentialGain.cpp.o  -o MemoryLatencyAndPotentialGain -Wl,-rpath,/home/behrooz/Software/PAPI/lib /home/behrooz/Software/PAPI/lib/libpapi.so 

@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/low_level_demo_l1_and_flops.dir/src/low_level_demo_l1_and_flops.cpp.o  -o low_level_demo_l1_and_flops -Wl,-rpath,/home/behrooz/Software/PAPI/lib /home/behrooz/Software/PAPI/lib/libpapi.so 
