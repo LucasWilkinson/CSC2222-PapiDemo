@@ -2,9 +2,10 @@
 // Created by lwilkinson on 10/30/21.
 //
 
-#ifndef CSC2222_PAPIDEMO_PAPI_UTLS_H
-#define CSC2222_PAPIDEMO_PAPI_UTLS_H
+#ifndef CSC2222_PAPIDEMO_PAPI_UTILS_H
+#define CSC2222_PAPIDEMO_PAPI_UTILS_H
 
+#include <iostream>
 #include <papi.h>
 
 #define ERRCODE(ecode) case ecode : err = #ecode; break
@@ -47,4 +48,4 @@
 } while(0)
 
 
-#endif //CSC2222_PAPIDEMO_PAPI_UTLS_H
+#endif //CSC2222_PAPIDEMO_PAPI_UTILS_H

@@ -1,9 +1,8 @@
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
 #include <vector>
 
-#include "papi_utls.h"
+#include "papi_utils.h"
 
 
 const int NUM_LOOP = 1000000;
@@ -46,11 +45,7 @@ int main() {
     }
     PAPI_SAFE_CALL(PAPI_stop(event_set, results.data()));
 
-    double sp_flop = (double)results[0];
-
-    double sp_flop_per_loop  = sp_flop / NUM_LOOP;
-    sp_flop_per_loop -= 1; // substract 1 FLOP for minus op.
-    std::cout << "SP flop of sqrt() : " << results[0] <<  " " << results[1] << " " << event_set <<  std::endl;
+    std::cout << "L1 Cache Misses: " << results[0] << " Flops: " << results[1] <<  std::endl;
   }
 
   PAPI_SAFE_CALL(PAPI_cleanup_eventset(event_set));

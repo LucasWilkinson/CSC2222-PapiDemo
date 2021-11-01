@@ -6,8 +6,12 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(PAPI REQUIRED)
 message(STATUS ${PAPI_LIBRARIES})
 
-
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(CSC2222_PapiDemo main.cpp)
-target_link_libraries(CSC2222_PapiDemo ${PAPI_LIBRARIES})
+# Low Level Demo
+add_executable(low_level_demo low_level_demo.cpp)
+target_link_libraries(low_level_demo ${PAPI_LIBRARIES})
+
+# High Level Demo
+add_executable(high_level_demo high_level_demo.cpp)
+target_link_libraries(high_level_demo ${PAPI_LIBRARIES})
