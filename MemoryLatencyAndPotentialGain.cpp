@@ -1,9 +1,14 @@
 #include "papi_utils.h"
 #include <vector>
+#include <omp.h>
 
 
-#define N 128
-#define BLOCK_SIZE 4
+unsigned long omp_get_thread_num_wrapper(){
+    return (unsigned long)omp_get_thread_num();
+}
+
+#define N 1024
+#define BLOCK_SIZE 32
 typedef std::vector<std::vector<double>> TwoDVec;
 
 inline void tileCode(TwoDVec& C, TwoDVec& A, TwoDVec& B){
@@ -188,17 +193,196 @@ void memoryLatency(){
     std::cout << "The tile code average memory latency is: " << avg_mem_latency_naive << std::endl;
 }
 
-void potentialGain(){
+void potentialGainUnBalanced(){
+    TwoDVec A (N, std::vector<double>(N,5));
+    TwoDVec B (N, std::vector<double>(N,5));
+    TwoDVec C (N, std::vector<double>(N,0));
+    long long int TOT_CYC_TH1, TOT_CYC_TH2;
+    //================ Initializing the library and threading requirements ===================
+    //Init PAPI Threads
+    if( PAPI_is_initialized() == PAPI_NOT_INITED ) {
+        std::cout << "*** Initializing the PAPI Library ***" << std::endl;
+        // Initialize PAPI library for each thread.
+        int retval = PAPI_library_init( PAPI_VER_CURRENT );
+        if ( retval != PAPI_VER_CURRENT ) {
+            ERROR_RETURN(retval)
+        }
 
+        retval = PAPI_thread_init(omp_get_thread_num_wrapper);
+        if ( retval != PAPI_OK ) {
+            if ( retval == PAPI_ECMP ) {
+                ERROR_RETURN(retval)
+            }
+            else {
+                ERROR_RETURN(retval)
+            }
+        }
+    }
+    //========================================================================================
+
+
+    #pragma omp parallel
+    {
+        //================ Initializing the library and threading requirements ===================
+        int event_set = PAPI_NULL;
+        int retval;
+        PAPI_register_thread();
+
+        if((retval = PAPI_create_eventset(&event_set)) != PAPI_OK) {
+            ERROR_RETURN(retval)
+        }
+        if((retval = PAPI_add_event(event_set, PAPI_TOT_CYC)) != PAPI_OK) {
+            std::cout << "*** for code 25 it seems that you didn't reduce the paranoid flags ***" << std::endl;
+            ERROR_RETURN(retval)
+        }
+
+        if((retval = PAPI_reset(event_set)) != PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+
+        if((retval = PAPI_start(event_set)) != PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+        //========================================================================================
+        std::cout << omp_get_thread_num() << std::endl;
+        //================= unbalanced DGEMM ================
+        #pragma omp for schedule (static, N) nowait
+        for (int i = 0; i < N; i ++) {
+            for (int j = 0; j < N; j ++) {
+                for (int k = 0; k < N; k ++) {
+                    C[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        //===================================================
+        if(omp_get_thread_num() == 0){
+            if((retval = PAPI_stop(event_set, &TOT_CYC_TH1)) != PAPI_OK){
+                ERROR_RETURN(retval)
+            }
+        } else if (omp_get_thread_num() == 1){
+            if((retval = PAPI_stop(event_set, &TOT_CYC_TH2)) != PAPI_OK){
+                ERROR_RETURN(retval)
+            }
+        } else {
+            std::cout << "The current demo works for only 2 threads" << std::endl;
+        }
+
+        if ( (retval=PAPI_remove_event(event_set, PAPI_TOT_CYC))!=PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+
+        if ( (retval=PAPI_destroy_eventset( &event_set ))!=PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+
+        PAPI_unregister_thread();
+    }
+    double total_balance_work = (TOT_CYC_TH1 + TOT_CYC_TH2) / 2;
+    double critical_path = std::max(TOT_CYC_TH1, TOT_CYC_TH2);
+    double PG = 1 - total_balance_work / critical_path;
+    std::cout << "Potential Gain for unbalanced DGEMM is: " << PG << std::endl;
+}
+void potentialGainBalanced(){
+    TwoDVec A (N, std::vector<double>(N,5));
+    TwoDVec B (N, std::vector<double>(N,5));
+    TwoDVec C (N, std::vector<double>(N,0));
+    omp_set_num_threads(2);
+    long long int TOT_CYC_TH1 = 0, TOT_CYC_TH2 = 0;
+    //================ Initializing the library and threading requirements ===================
+    //Init PAPI Threads
+    if( PAPI_is_initialized() == PAPI_NOT_INITED ) {
+        std::cout << "*** Initializing the PAPI Library ***" << std::endl;
+        // Initialize PAPI library for each thread.
+        int retval = PAPI_library_init( PAPI_VER_CURRENT );
+        if ( retval != PAPI_VER_CURRENT ) {
+            ERROR_RETURN(retval)
+        }
+
+        retval = PAPI_thread_init(omp_get_thread_num_wrapper);
+        if ( retval != PAPI_OK ) {
+            if ( retval == PAPI_ECMP ) {
+                ERROR_RETURN(retval)
+            }
+            else {
+                ERROR_RETURN(retval)
+            }
+        }
+    }
+    //========================================================================================
+
+    // std::cout << "Number of thread is " << omp_get_max_threads() << std::endl;
+    #pragma omp parallel
+    {
+        //================ Initializing the library and threading requirements ===================
+        int event_set = PAPI_NULL;
+        int retval;
+        PAPI_register_thread();
+
+        if((retval = PAPI_create_eventset(&event_set)) != PAPI_OK) {
+            ERROR_RETURN(retval)
+        }
+        if((retval = PAPI_add_event(event_set, PAPI_TOT_CYC)) != PAPI_OK) {
+            std::cout << "*** for code 25 it seems that you didn't reduce the paranoid flags ***" << std::endl;
+            ERROR_RETURN(retval)
+        }
+
+        if((retval = PAPI_reset(event_set)) != PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+
+        if((retval = PAPI_start(event_set)) != PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+        //========================================================================================
+
+        //================= unbalanced DGEMM ================
+        #pragma omp for 
+        for (int i = 0; i < N; i ++) {
+            for (int j = 0; j < N; j ++) {
+                for (int k = 0; k < N; k ++) {
+                    C[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        //===================================================
+        std::cout << omp_get_thread_num() << std::endl;
+        if(omp_get_thread_num() == 0){
+            if((retval = PAPI_stop(event_set, &TOT_CYC_TH1)) != PAPI_OK){
+                ERROR_RETURN(retval)
+            }
+        } else if (omp_get_thread_num() == 1){
+            if((retval = PAPI_stop(event_set, &TOT_CYC_TH2)) != PAPI_OK){
+                ERROR_RETURN(retval)
+            }
+        } else {
+            std::cout << "The current demo works for only 2 threads" << std::endl;
+        }
+
+        if ( (retval=PAPI_remove_event(event_set, PAPI_TOT_CYC))!=PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+
+        if ( (retval=PAPI_destroy_eventset( &event_set ))!=PAPI_OK){
+            ERROR_RETURN(retval)
+        }
+
+        PAPI_unregister_thread();
+    }
+    std::cout << TOT_CYC_TH1 << "\t" << TOT_CYC_TH2 << std::endl;
+    double total_balance_work = (TOT_CYC_TH1 + TOT_CYC_TH2) / 2;
+    double critical_path = std::max(TOT_CYC_TH1, TOT_CYC_TH2);
+    double PG = 1 - total_balance_work / critical_path;
+    std::cout << "Potential Gain for balanced DGEMM code is: " << PG << std::endl;
 }
 
 int main(int argc, char *argv[])
 
 {
-    //Demo 1 - Low-level API - Memory Latency
+    //Demo 1 - Memory Latency
     memoryLatency();
 
-    //Demo 3 - Low-Level API - Potential Gain
-//    potentialGain();
-
+    omp_set_num_threads(2);
+    //Demo 2 - Potential Gain
+    potentialGainUnBalanced();
+    potentialGainBalanced();
 }

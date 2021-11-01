@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.00)
 project(CSC2222_PapiDemo)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp ")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(PAPI REQUIRED)
