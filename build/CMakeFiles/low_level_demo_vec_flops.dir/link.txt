@@ -1,1 +1,1 @@
-/usr/bin/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/low_level_demo_vec_flops.dir/src/low_level_demo_vec_flops.cpp.o  -o low_level_demo_vec_flops -Wl,-rpath,/home/behrooz/Software/PAPI/lib /home/behrooz/Software/PAPI/lib/libpapi.so 
+/usr/bin/c++   -fopenmp  -O3 -DNDEBUG  -rdynamic CMakeFiles/low_level_demo_vec_flops.dir/src/low_level_demo_vec_flops.cpp.o  -o low_level_demo_vec_flops -Wl,-rpath,/home/behrooz/Software/PAPI/lib /home/behrooz/Software/PAPI/lib/libpapi.so 
