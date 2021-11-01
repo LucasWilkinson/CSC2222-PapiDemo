@@ -4,8 +4,10 @@ project(CSC2222_PapiDemo)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(PAPI REQUIRED)
-message(STATUS ${PAPI_LIBRARIES})
-message(STATUS ${PAPI_INCLUDE_DIRS})
+message(STATUS "Found PAPI")
+message(STATUS "   Papi lib: ${PAPI_LIBRARIES}")
+message(STATUS "   Papi inc: ${PAPI_INCLUDE_DIRS}")
+
 set(CMAKE_CXX_STANDARD 14)
 
 macro(add_low_level_demo_executable)
@@ -53,4 +55,3 @@ target_compile_definitions(high_level_demo_snapshotting PUBLIC TILE_SNAPSHOTTING
 add_executable(MemoryLatencyAndPotentialGain MemoryLatencyAndPotentialGain.cpp)
 target_link_libraries(MemoryLatencyAndPotentialGain ${PAPI_LIBRARIES})
 target_include_directories(MemoryLatencyAndPotentialGain PUBLIC ${PAPI_INCLUDE_DIRS})
-target_compile_definitions(MemoryLatencyAndPotentialGain PUBLIC TILE_SNAPSHOTTING=1)

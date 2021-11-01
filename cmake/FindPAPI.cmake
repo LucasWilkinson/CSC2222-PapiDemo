@@ -27,8 +27,6 @@ if (DEFINED ENV{PAPIROOT})
     set(PAPI_PREFIX $ENV{PAPIROOT})
 endif()
 
-set(PAPI_PREFIX "/home/behrooz/Software/PAPI")
-
 find_path(PAPI_PREFIX
         NAMES include/papi.h
         )
