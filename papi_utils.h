@@ -1,6 +1,8 @@
 //
 // Created by lwilkinson on 10/30/21.
 //
+// Adapted from: https://gist.github.com/keisukefukuda/8141120
+//
 
 #ifndef CSC2222_PAPIDEMO_PAPI_UTILS_H
 #define CSC2222_PAPIDEMO_PAPI_UTILS_H
