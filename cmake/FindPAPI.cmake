@@ -1,21 +1,31 @@
+#
+# Modified from: https://github.com/LLNL/perf-dump/blob/master/cmake/FindPAPI.cmake
+#
 # Try to find PAPI headers and libraries.
 #
 # Usage of this module as follows:
 #
 #     find_package(PAPI)
 #
+# Set PAPIROOT env var if PAPI cannot be found
+#
 # Variables used by this module, they can change the default behaviour and need
 # to be set before calling find_package:
 #
 #  PAPI_PREFIX         Set this variable to the root installation of
 #                      libpapi if the module has problems finding the
-#                      proper installation path.
+#                      proper installation path. Will override papi root.
 #
 # Variables defined by this module:
 #
 #  PAPI_FOUND              System has PAPI libraries and headers
 #  PAPI_LIBRARIES          The PAPI library
 #  PAPI_INCLUDE_DIRS       The location of PAPI headers
+#
+
+if (DEFINED ENV{PAPIROOT})
+    set(PAPI_PREFIX $ENV{PAPIROOT})
+endif()
 
 find_path(PAPI_PREFIX
         NAMES include/papi.h
