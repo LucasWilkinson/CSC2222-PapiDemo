@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+..//papi_utils.h
+iostream
+-
+papi.h
+-
+
+/home/behrooz/Desktop/CSC2222-PapiDemo/build/src/low_level_demo_vec_flops.cpp
+cstdlib
+-
+vector
+-
+papi_utils.h
+/home/behrooz/Desktop/CSC2222-PapiDemo/build/src/papi_utils.h
+
+/home/behrooz/Software/PAPI/include/papi.h
+sys/types.h
+-
+limits.h
+-
+papiStdEventDefs.h
+/home/behrooz/Software/PAPI/include/papiStdEventDefs.h
+signal.h
+-
+
+/home/behrooz/Software/PAPI/include/papiStdEventDefs.h
+

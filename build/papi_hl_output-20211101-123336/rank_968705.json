@@ -1,0 +1,44 @@
+{
+  "papi_version":"6.0.0.1",
+  "cpu_info":"Intel(R) Xeon(R) W-2255 CPU @ 3.70GHz",
+  "max_cpu_rate_mhz":"3700",
+  "min_cpu_rate_mhz":"1200",
+  "event_definitions":{
+    "perf::TASK-CLOCK":{
+      "component":"perf_event",
+      "type":"delta"
+    },
+    "PAPI_TOT_INS":{
+      "component":"perf_event",
+      "type":"delta"
+    },
+    "PAPI_TOT_CYC":{
+      "component":"perf_event",
+      "type":"delta"
+    }
+  },
+  "threads":{
+    "0":{
+      "regions":{
+        "0":{
+          "name":"naive_mm",
+          "parent_region_id":"-1",
+          "cycles":"8466886",
+          "real_time_nsec":"2280983",
+          "perf::TASK-CLOCK":"2291092",
+          "PAPI_TOT_INS":"18994620",
+          "PAPI_TOT_CYC":"7855174"
+        },
+        "1":{
+          "name":"tiled_mm",
+          "parent_region_id":"-1",
+          "cycles":"6684936",
+          "real_time_nsec":"1808647",
+          "perf::TASK-CLOCK":"1808438",
+          "PAPI_TOT_INS":"19621761",
+          "PAPI_TOT_CYC":"6652006"
+        }
+      }
+    }
+  }
+}
