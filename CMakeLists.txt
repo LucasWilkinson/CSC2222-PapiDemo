@@ -24,6 +24,10 @@ add_low_level_demo_executable(low_level_demo_l1)
 set(PAPI_EVENTS "PAPI_DP_OPS")
 add_low_level_demo_executable(low_level_demo_flops)
 
+# Low Level Demo - Flops + Vec Flops
+set(PAPI_EVENTS "PAPI_DP_OPS, PAPI_VEC_DP")
+add_low_level_demo_executable(low_level_demo_vec_flops)
+
 # Low Level Demo - L1 Cache Misses + Flops
 set(PAPI_EVENTS "PAPI_DP_OPS, PAPI_L1_DCM")
 add_low_level_demo_executable(low_level_demo_l1_and_flops)
@@ -31,7 +35,7 @@ add_low_level_demo_executable(low_level_demo_l1_and_flops)
 # Low Level Demo - L1 Cache Misses + Flops - Multiplexed
 set(PAPI_EVENTS "PAPI_DP_OPS, PAPI_L1_DCM")
 add_low_level_demo_executable(low_level_demo_l1_and_flops_multiplexed)
-target_compile_definitions(low_level_demo_l1_and_flops_multiplexed PUBLIC PAPI_MULTIPLEX=1)
+target_compile_definitions(low_level_demo_l1_and_flops_multiplexed PUBLIC MULTIPLEX=1)
 
 # High Level Demo
 add_executable(high_level_demo high_level_demo.cpp)

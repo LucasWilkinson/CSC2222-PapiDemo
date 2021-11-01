@@ -22,12 +22,15 @@ int main() {
   int event_set = PAPI_NULL;
 
   PAPI_SAFE_CALL(PAPI_create_eventset(&event_set));
-  PAPI_SAFE_CALL(PAPI_add_events(event_set, ctrs, num_events));
 
-#ifdef PAPI_MULTIPLEX
+#ifdef MULTIPLEX
+  std::cout << "Using papi multiplexer" << std::endl;
   PAPI_SAFE_CALL(PAPI_multiplex_init());
+  PAPI_SAFE_CALL(PAPI_assign_eventset_component(event_set, 0));
   PAPI_SAFE_CALL(PAPI_set_multiplex(event_set));
 #endif
+
+  PAPI_SAFE_CALL(PAPI_add_events(event_set, ctrs, num_events));
 
   std::vector<long long> results(num_events, -1L);
 
