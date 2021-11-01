@@ -3,7 +3,6 @@
 
 #include "papi_utils.h"
 
-#define str(s) #s
 
 int main() {
   int N = 128; int BLOCK_SIZE = 32;
