@@ -15,3 +15,8 @@ target_link_libraries(low_level_demo ${PAPI_LIBRARIES})
 # High Level Demo
 add_executable(high_level_demo high_level_demo.cpp)
 target_link_libraries(high_level_demo ${PAPI_LIBRARIES})
+
+# High Level Demo With Snapshotting
+add_executable(high_level_demo_snapshotting high_level_demo.cpp)
+target_link_libraries(high_level_demo_snapshotting ${PAPI_LIBRARIES})
+target_compile_definitions(high_level_demo_snapshotting PUBLIC TILE_SNAPSHOTTING=1)
