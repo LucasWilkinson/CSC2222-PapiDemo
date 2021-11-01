@@ -47,5 +47,12 @@
     }                                             \
 } while(0)
 
+//For Error codes please see https://www.ibm.com/docs/en/zos/2.2.0?topic=papi-return-codes
+#define ERROR_RETURN(retval) { \
+    if(retval !=PAPI_OK)                \
+    {                              \
+    fprintf(stderr, "Error %d %s:line %d: \n", retval,__FILE__,__LINE__);  exit(retval); \
+    }\
+}
 
 #endif //CSC2222_PAPIDEMO_PAPI_UTILS_H

@@ -17,6 +17,8 @@
 #  PAPI_LIBRARIES          The PAPI library
 #  PAPI_INCLUDE_DIRS       The location of PAPI headers
 
+set(PAPI_PREFIX "/home/behrooz/Software/PAPI")
+
 find_path(PAPI_PREFIX
         NAMES include/papi.h
         )
