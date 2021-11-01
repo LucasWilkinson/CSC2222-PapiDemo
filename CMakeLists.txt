@@ -8,9 +8,30 @@ message(STATUS ${PAPI_LIBRARIES})
 
 set(CMAKE_CXX_STANDARD 14)
 
-# Low Level Demo
-add_executable(low_level_demo low_level_demo.cpp)
-target_link_libraries(low_level_demo ${PAPI_LIBRARIES})
+macro(add_low_level_demo_executable)
+    configure_file(low_level_demo.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/src/${ARGV0}.cpp @ONLY)
+    add_executable(${ARGV0} ${CMAKE_CURRENT_BINARY_DIR}/src/${ARGV0}.cpp)
+    target_link_libraries(${ARGV0} ${PAPI_LIBRARIES})
+    target_include_directories(${ARGV0} PUBLIC ${PROJECT_SOURCE_DIR})
+endmacro()
+
+
+# Low Level Demo - L1 Cache Misses
+set(PAPI_EVENTS "PAPI_L1_DCM")
+add_low_level_demo_executable(low_level_demo_l1)
+
+# Low Level Demo - Flops
+set(PAPI_EVENTS "PAPI_DP_OPS")
+add_low_level_demo_executable(low_level_demo_flops)
+
+# Low Level Demo - L1 Cache Misses + Flops
+set(PAPI_EVENTS "PAPI_DP_OPS, PAPI_L1_DCM")
+add_low_level_demo_executable(low_level_demo_l1_and_flops)
+
+# Low Level Demo - L1 Cache Misses + Flops - Multiplexed
+set(PAPI_EVENTS "PAPI_DP_OPS, PAPI_L1_DCM")
+add_low_level_demo_executable(low_level_demo_l1_and_flops_multiplexed)
+target_compile_definitions(low_level_demo_l1_and_flops_multiplexed PUBLIC PAPI_MULTIPLEX=1)
 
 # High Level Demo
 add_executable(high_level_demo high_level_demo.cpp)
